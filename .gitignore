@@ -28,6 +28,7 @@ media
 
 # Distribution / packaging
 django/nxvenv/
+Flask-UI/flask_venv
 .Python
 build/
 develop-eggs/

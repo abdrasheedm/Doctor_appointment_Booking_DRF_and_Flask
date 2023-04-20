@@ -52,6 +52,7 @@ class verify_otpView(APIView):
         data = request.data
         check_otp = data.get('otp')
         phone_number = data.get('phone_number')
+        print(check_otp, phone_number)
         # check = verify_otp(phone_number, check_otp)
         check = True
 
