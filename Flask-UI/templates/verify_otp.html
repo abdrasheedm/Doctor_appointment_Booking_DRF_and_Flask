@@ -1,0 +1,49 @@
+{% extends 'base.html' %} {% block style %}
+  body {
+    background-color: #ffffff;
+  }
+
+  .center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+
+  .form-container {
+    max-width: 500px;
+    width: 100%;
+    margin-bottom: 50px;
+    padding: 30px;
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    background-color: #f7f7f7;
+  }
+{% endblock %} {% block content %}
+
+<div class="center">
+  <div class="form-container">
+    <h2 class="text-center mb-4">Verify OTP</h2>
+    <p class="text-center mt-4">Please enter the otp sent to {{mobile}}</p>
+
+    <form method="post">
+      <div class="form-group">
+        <label for="password">OTP</label>
+        <input
+          type="text"
+          name = "otp"
+          class="form-control"
+          placeholder="Enter OTP"
+        />
+        <input type="hidden" value={{mobile}} name="mobile">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block mt-4">
+        Verify
+      </button>
+    </form>
+    <p class="text-center mt-4">Don't get OTP? <a href="/signup">resend OTP</a></p>
+  </div>
+</div>
+
+{% endblock %}
