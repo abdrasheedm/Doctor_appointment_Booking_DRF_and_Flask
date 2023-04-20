@@ -101,18 +101,22 @@ def book_appointment():
         return redirect('/')
     
 
-@app.route('/choose-doctor')
-def choose_doctor():
-    cat_id = request.GET['cat_id']
+@app.route('/choose-doctor/<int:cat_id>', methods=['GET', 'POST'])
+def choose_doctor(cat_id):
+    print(cat_id, 'cat_id')
     response = requests.get(BASEURL+'doctors/get-doctors-by-category/?_id='+str(cat_id))
     if response.status_code == 200:
         data = response.json()
         print(data)
-        t = render_template_string('doctors.html', data=data)
-        return jsonify(t)
+        return render_template('doctors.html', data=data)
     else:
         print(response.json())
         return redirect('/')
+    
+@app.route('/choose-time/<int:doc_id')
+def choose_time(doc_id):
+    print(doc_id)
+    
 
     
 

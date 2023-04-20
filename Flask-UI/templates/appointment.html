@@ -77,10 +77,12 @@
                           <div class="col-xl-3 col-md-6 mb-4 select-category" cat_id = {{category.id}} id="">
                             <div class="card border-0 shadow">
                               <img src="{{ url_for('static', filename='img/service1.jpg') }}" class="card-img-top" alt="...">
-                              <div class="card-body text-center">
-                                <h5 class="card-title mb-3">{{category.category}}</h5>
-                                <div class="card-text text-black-50">{{category.description}}</div>
-                              </div>
+                              <a href="/choose-doctor/{{category.id}}">
+                                <div class="card-body text-center">
+                                  <h5 class="card-title mb-3">{{category.category}}</h5>
+                                  <div class="card-text text-black-50">{{category.description}}</div>
+                                </div>
+                              </a>
                             </div>
                           </div>
                           {% endfor%}
@@ -97,20 +99,29 @@
 
 {% block script %}
 
-<script>
+<!-- <script>
   $(document).ready(function() {
     $('.select-category').click(function() {
-      var _id=$(this).attr('cat_id');
-      console.log(_id)
+      var cat_id=$(this).attr('cat_id');
       $.ajax({
-        url: `/choose-doctor`,
-        success: function(data) {
-          console.log(data)
-          
+        type: 'POST',
+        url: '/choose-doctor',
+        contentType: 'application/json',
+        data: JSON.stringify({
+           cat_id : cat_id
+        }),
+        success: function(response) {
+          $("#category").html(response.html);
+        },
+        error: function(xhr, status, error) {
+            console.log(error);
         }
-      });
+    });
+    
+    
+    
     });
   });
-</script>
+</script> -->
 
 {% endblock %}

@@ -70,7 +70,7 @@
                 <div class="card">
                     
                   <div class="container" id="category">
-                    <h4 class="blue-text">Choose Your doctor</h4>
+                    <h4 class="blue-text">Choose Your Time</h4>
                     <div class="row">
                       <!-- Team Member 1 -->
                       {% for doctor in data %}
@@ -95,31 +95,3 @@
     </div>
 {% endblock %}
 
-{% block script %}
-
-<!-- <script>
-  $(document).ready(function() {
-    $('.select-category').click(function() {
-      var cat_id=$(this).attr('cat_id');
-      $.ajax({
-        type: 'POST',
-        url: '/choose-doctor',
-        contentType: 'application/json',
-        data: JSON.stringify({
-           cat_id : cat_id
-        }),
-        success: function(response) {
-          $("#category").html(response.html);
-        },
-        error: function(xhr, status, error) {
-            console.log(error);
-        }
-    });
-    
-    
-    
-    });
-  });
-</script> -->
-
-{% endblock %}
