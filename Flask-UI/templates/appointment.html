@@ -1,0 +1,116 @@
+{% extends 'base.html' %} 
+{% block style %}
+
+    .card {
+    padding: 30px 40px;
+    margin-top: 60px;
+    margin-bottom: 60px;
+        border: none !important;
+        box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.2)
+    }
+
+    .blue-text {
+        color: #00BCD4
+    }
+
+    .form-control-label {
+        margin-bottom: 0
+    }
+
+    input,
+    textarea,
+    button {
+        padding: 8px 15px;
+        border-radius: 5px !important;
+        margin: 5px 0px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        font-size: 18px !important;
+        font-weight: 300
+    }
+
+    input:focus,
+    textarea:focus {
+        -moz-box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+        border: 1px solid #00BCD4;
+        outline-width: 0;
+        font-weight: 400
+    }
+
+    .btn-block {
+        text-transform: uppercase;
+        font-size: 15px !important;
+        font-weight: 400;
+        height: 43px;
+        cursor: pointer
+    }
+
+    .btn-block:hover {
+        color: #fff !important
+    }
+
+    button:focus {
+        -moz-box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+        outline-width: 0
+    }
+    {% endblock %} 
+    {% block content %}
+
+    <div class="container-fluid px-1 py-5 mx-auto">
+        <div class="row d-flex justify-content-center">
+            <div class="col-xl-9 col-lg-8 col-md-9 col-11 text-center">
+                <h3>
+                    Book an appointment
+                </h3>
+                
+                <div class="card">
+                    
+                    <div class="container" id="category">
+                        <h4 class="blue-text">Choose Your category</h4>
+                        <div class="row">
+                          <!-- Team Member 1 -->
+                          {% for category in data %}
+                          <div class="col-xl-3 col-md-6 mb-4 select-category" cat_id = {{category.id}} id="">
+                            <div class="card border-0 shadow">
+                              <img src="{{ url_for('static', filename='img/service1.jpg') }}" class="card-img-top" alt="...">
+                              <div class="card-body text-center">
+                                <h5 class="card-title mb-3">{{category.category}}</h5>
+                                <div class="card-text text-black-50">{{category.description}}</div>
+                              </div>
+                            </div>
+                          </div>
+                          {% endfor%}
+                          
+                        </div>
+                        <!-- /.row -->
+                      
+                      </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+
+<script>
+  $(document).ready(function() {
+    $('.select-category').click(function() {
+      var _id=$(this).attr('cat_id');
+      console.log(_id)
+      $.ajax({
+        url: `/choose-doctor`,
+        success: function(data) {
+          console.log(data)
+          
+        }
+      });
+    });
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,21 @@
+<div class="container" id="category">
+    <h4 class="blue-text">Choose Your doctor</h4>
+    <div class="row">
+      <!-- Team Member 1 -->
+      {% for doctor in data %}
+      <div class="col-xl-3 col-md-6 mb-4 select-category" doc_id = {{doctor.id}} id="">
+        <div class="card border-0 shadow">
+          <img src="{{ url_for('static', filename='img/service1.jpg') }}" class="card-img-top" alt="...">
+          <div class="card-body text-center">
+            <h5 class="card-title mb-3">{{doctor.doctor.first_name}}</h5>
+            <div class="card-text text-black-50">{{doctor.category}}</div>
+          </div>
+        </div>
+      </div>
+      {% endfor%}
+      
+    </div>
+    <!-- /.row -->
+  
+  </div>
+</div>

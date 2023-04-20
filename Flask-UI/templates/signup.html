@@ -1,0 +1,103 @@
+{% extends 'base.html' %} {% block style %}
+  body {
+    background-color: #ffffff;
+  }
+
+  .center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+
+  .form-container {
+    max-width: 500px;
+    width: 100%;
+    margin-bottom: 50px;
+    padding: 30px;
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    background-color: #f7f7f7;
+  }
+{% endblock %} {% block content %}
+
+<div class="center">
+  <div class="form-container">
+    <h2 class="text-center mb-4">Sign Up</h2>
+    <form method="post">
+      <div class="form-group">
+        <label for="first_name">First Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="first_name"
+          name="first_name"
+          placeholder="Enter First name"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="last_name">Last Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="last_name"
+          name="last_name"
+          placeholder="Enter Last Name"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="email">Email address</label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          name="email"
+          placeholder="Enter email"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="phone_number">Phone Number</label>
+        <input
+          type="tel"
+          class="form-control"
+          id="phone_number"
+          name="mobile"
+          placeholder="Enter Phone number"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          name="password1"
+          placeholder="Password"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="confirm_password">Confirm Password</label>
+        <input
+          type="password"
+          class="form-control"
+          id="confirm_password"
+          name="password2"
+          placeholder="Confirm Password"
+          required
+        />
+      </div>
+      <button type="submit" class="btn btn-primary btn-block mt-4">
+        Sign Up
+      </button>
+    </form>
+    <p class="text-center mt-4">Already have an account? <a href="/signin">Sign in</a></p>
+  </div>
+</div>
+
+{% endblock %}
