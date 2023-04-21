@@ -1,15 +1,33 @@
-from flask import Flask, render_template, session, request, redirect, url_for, render_template_string, jsonify
-from datetime import datetime
-
-
-import requests
-import secrets
+from flask import Flask, render_template, session, request, redirect, url_for
+import json, requests, secrets
 
 secret_key = secrets.token_hex(32)
 app = Flask(__name__)
 app.secret_key = secret_key
 
 BASEURL = 'http://127.0.0.1:8000/api/'
+
+
+# Resfresh token
+def refresh_token():
+    if 'token' not in session:
+        print('inside')
+        return redirect('/signin')
+    token = session['token']
+    refresh = token['refresh']
+    headers= {
+        "Content-Type": "application/json",
+      }
+    data = {"refresh" : refresh}
+    response = requests.post(BASEURL+'token/refresh/', data=json.dumps(data), headers=headers)
+    if response.status_code == 200:
+        data = response.json()
+        session['token'] = data
+        return
+    else:
+        return redirect('/signin')
+    
+
 
 @app.route('/')
 def index():
@@ -39,7 +57,7 @@ def signup():
                 data = response.json()
                 return redirect(url_for('verify_otp', phone_number=phone_number))
             else:
-                print(response.json())
+                return redirect('/signup')
 
     return render_template('signup.html')   
 
@@ -57,7 +75,6 @@ def verify_otp(phone_number):
         if response.status_code == 200:
             return redirect('/signin')
         else:
-            print(response.json())
             return redirect('/verify_otp')
     return render_template('verify_otp.html', mobile=phone_number)
 
@@ -84,11 +101,22 @@ def signin():
 
 @app.route('/logout')
 def logout():
-    session.pop('token', None)
-    session.pop('user_id', None)
-
-    return redirect('/')
-
+    print('hai')
+    print('hai')
+    if 'token' not in session:
+        return redirect('/signin')
+    token = session['token']
+    headers = {
+        'Authorization': 'Bearer '+token['access']
+    }
+    response = requests.post(BASEURL+'account/logout/', data=token, headers=headers)
+    if response.status_code == 200:
+        session.pop('token', None)
+        session.pop('user_id', None)
+        return redirect('/')
+    else:
+        return redirect('/')
+    
 
 @app.route('/book-an-appointment')
 def book_appointment():
@@ -109,56 +137,78 @@ def book_appointment():
 
 @app.route('/choose-doctor/<int:cat_id>', methods=['GET', 'POST'])
 def choose_doctor(cat_id):
-    print(cat_id, 'cat_id')
+    if 'token' not in session:
+        return redirect('/signin')
     response = requests.get(BASEURL+'doctors/get-doctors-by-category/?_id='+str(cat_id))
     if response.status_code == 200:
         data = response.json()
-        print(data)
         return render_template('doctors.html', data=data)
     else:
         print(response.json())
-        return redirect('/')
+        return render_template('404_error.html')
 
 
     
 @app.route('/choose-time/<int:doc_id>')
 def choose_time(doc_id):
-    print(doc_id)
-    response = requests.get(BASEURL+'appointments/time-slots/?doc_id='+str(doc_id))
+    if 'token' not in session:
+        return redirect('/signin')
+    token = session['token']
+    headers = {
+        'Authorization': 'Bearer '+token['access']
+    }
+    response = requests.get(BASEURL+'appointments/time-slots/?doc_id='+str(doc_id), headers=headers)
     if response.status_code == 200:
         data = response.json()
-        print(data)
         return render_template('choose_time.html', data=data)
+    elif response.staticmethod == 401:
+        refresh_token()
+        return redirect(choose_time(doc_id))
     else:
-        print(response.json())
-        return redirect('/')
+        return render_template('404_error.html')
+    
     
 
 @app.route('/book-slot/<int:slot_id>')
 def book_slot(slot_id):
+    if 'token' not in session:
+        return redirect('/signin')
+    token = session['token']
+    headers = {
+        'Authorization': 'Bearer '+token['access']
+    }
     user_id = session['user_id']
     data = {
         "appointment" : slot_id,
         "user" : user_id
     }
-    response = requests.post(BASEURL+'appointments/book-slot/', data)
+    response = requests.post(BASEURL+'appointments/book-slot/', data = data, headers=headers)
     if response.status_code == 201:
         data = response.json()
-        print(data)
         return render_template('success.html')
+    elif response.staticmethod == 401:
+        refresh_token()
+        return redirect(book_slot(slot_id))
     else:
-        print(response.json())
         return redirect('/')
     
 
 @app.route('/booked-slots')
 def booked_slots():
+    if 'token' not in session:
+        return redirect('/signin')
     u_id = session['user_id']
-    response = requests.get(BASEURL+'appointments/booked-appointments/?user_id='+ str(u_id))
+    token = session['token']
+    headers = {
+        'Authorization': 'Bearer '+token['access']
+    }
+    response = requests.get(BASEURL+'appointments/booked-appointments/?user_id='+ str(u_id), headers=headers)
     if response.status_code == 200:
         data = response.json()
-        print(data)
         return render_template('booked_slots.html', data=data)
+    elif response.staticmethod == 401:
+        refresh_token()
+        return redirect(book_slot())
     else:
         print(response.json())
         return redirect('/')
@@ -166,11 +216,19 @@ def booked_slots():
 
 @app.route('/delete-slot/<int:slot_id>')
 def delete_slot(slot_id):
-    print(slot_id, '----------------------------')
-    response = requests.delete(BASEURL+'appointments/delete-slot/?slot_id='+ str(slot_id))
+    if 'token' not in session:
+        return redirect('/signin')
+    token = session['token']
+    headers = {
+        'Authorization': 'Bearer '+token['access']
+    }
+    response = requests.delete(BASEURL+'appointments/delete-slot/?slot_id='+ str(slot_id), headers=headers)
     if response.status_code == 204:
-        print('success')
         return redirect('/booked-slots')
+    
+    elif response.staticmethod == 401:
+        refresh_token()
+        return redirect(delete_slot(slot_id))
     else:
         return redirect('/booked-slots')
     
@@ -179,4 +237,4 @@ def delete_slot(slot_id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=9000)
+    app.run(debug=True, port=7000)

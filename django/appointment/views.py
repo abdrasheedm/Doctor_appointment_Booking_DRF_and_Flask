@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.request import Request
+from rest_framework.permissions import IsAuthenticated
 
 # local imports
 from .serializers import TimeSlotSerializer, BookSlotSerializer, BookedAppointmentSerializer
@@ -13,7 +14,7 @@ from .models import Appointment, AppointmentBook
 
 
 class GetTimeSlotsView(APIView):
-
+    permission_classes = [IsAuthenticated]
     def get(self, request:Request):
         doc_id = request.query_params['doc_id']
         try:
@@ -26,7 +27,7 @@ class GetTimeSlotsView(APIView):
         
 
 class BookSlotView(APIView):
-
+    permission_classes = [IsAuthenticated]
     def post(self, request : Request):
         print(request.data, '---------------------------------')
         serializer = BookSlotSerializer(data=request.data)
@@ -43,6 +44,8 @@ class BookSlotView(APIView):
     
 class BookedAppointmentsView(APIView):
 
+    permission_classes = [IsAuthenticated]
+
     def get(self, request:Request):
         u_id = request.query_params['user_id']
         try:
@@ -57,10 +60,14 @@ class BookedAppointmentsView(APIView):
 
 class DeleteSlotView(APIView):
 
+    permission_classes = [IsAuthenticated]
+    
     def delete(self, request:Request):
         slot_id = request.query_params['slot_id']
         try:
             instance = AppointmentBook.objects.get(id = slot_id)
+            instance.appointment.is_available = True
+            instance.appointment.save()
             instance.delete()
             return Response({"message": "Slot deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 

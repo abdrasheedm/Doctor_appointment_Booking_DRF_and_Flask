@@ -14,6 +14,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+
 
 
 # Create your views here.
@@ -28,7 +30,7 @@ class SignUpView(generics.GenericAPIView):
 
         if serializer.is_valid():
             serializer.save()
-            # send_otp(request.data.get('phone_number'))
+            send_otp(request.data.get('phone_number'))
             response = {
                 "message" : "User created Succesfully"
             }
@@ -53,8 +55,8 @@ class verify_otpView(APIView):
         check_otp = data.get('otp')
         phone_number = data.get('phone_number')
         print(check_otp, phone_number)
-        # check = verify_otp(phone_number, check_otp)
-        check = True
+        check = verify_otp(phone_number, check_otp)
+        # check = True
 
         if check:
             user = Account.objects.get(phone_number = phone_number)
@@ -92,3 +94,20 @@ class LoginView(APIView):
                 return Response({"message": "user is not verified"}, status=status.HTTP_401_UNAUTHORIZED)
         else:
             return Response({"message" : "Invalid email or password"}, status=status.HTTP_401_UNAUTHORIZED)
+        
+
+    
+
+class LogoutView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request:Response):
+        try:
+            print(request.data)
+            refresh_token = request.data["refresh"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+
+            return Response({"message": "Logged out successfully"},status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
