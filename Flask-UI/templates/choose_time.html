@@ -1,97 +1,57 @@
-{% extends 'base.html' %} 
-{% block style %}
-
-    .card {
-    padding: 30px 40px;
-    margin-top: 60px;
-    margin-bottom: 60px;
-        border: none !important;
-        box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.2)
-    }
-
-    .blue-text {
-        color: #00BCD4
-    }
-
-    .form-control-label {
-        margin-bottom: 0
-    }
-
-    input,
-    textarea,
-    button {
-        padding: 8px 15px;
-        border-radius: 5px !important;
-        margin: 5px 0px;
-        box-sizing: border-box;
-        border: 1px solid #ccc;
-        font-size: 18px !important;
-        font-weight: 300
-    }
-
-    input:focus,
-    textarea:focus {
-        -moz-box-shadow: none !important;
-        -webkit-box-shadow: none !important;
-        box-shadow: none !important;
-        border: 1px solid #00BCD4;
-        outline-width: 0;
-        font-weight: 400
-    }
-
-    .btn-block {
-        text-transform: uppercase;
-        font-size: 15px !important;
-        font-weight: 400;
-        height: 43px;
-        cursor: pointer
-    }
-
-    .btn-block:hover {
-        color: #fff !important
-    }
-
-    button:focus {
-        -moz-box-shadow: none !important;
-        -webkit-box-shadow: none !important;
-        box-shadow: none !important;
-        outline-width: 0
-    }
-    {% endblock %} 
-    {% block content %}
-
-    <div class="container-fluid px-1 py-5 mx-auto">
-        <div class="row d-flex justify-content-center">
-            <div class="col-xl-9 col-lg-8 col-md-9 col-11 text-center">
-                <h3>
-                    Book an appointment
-                </h3>
-                
-                <div class="card">
-                    
-                  <div class="container" id="category">
-                    <h4 class="blue-text">Choose Your Time</h4>
-                    <div class="row">
-                      <!-- Team Member 1 -->
-                      {% for doctor in data %}
-                      <div class="col-xl-3 col-md-6 mb-4 select-category" doc_id = {{doctor.id}} id="">
-                        <div class="card border-0 shadow">
-                          <img src="{{ url_for('static', filename='img/service1.jpg') }}" class="card-img-top" alt="...">
-                          <div class="card-body text-center">
-                            <h5 class="card-title mb-3">{{doctor.doctor.first_name}}</h5>
-                            <div class="card-text text-black-50">{{doctor.category.category}}</div>
-                          </div>
-                        </div>
-                      </div>
-                      {% endfor%}
-                      
-                    </div>
-                    <!-- /.row -->
-                  
-                  </div>
-                </div>
-            </div>
-        </div>
-    </div>
+{% extends 'base.html' %} {% block style %} .card { padding: 30px 40px;
+margin-top: 60px; margin-bottom: 60px; border: none !important; box-shadow: 0
+6px 12px 0 rgba(0, 0, 0, 0.2) } .blue-text { color: #00BCD4 }
+.form-control-label { margin-bottom: 0 } input, textarea, button { padding: 8px
+15px; border-radius: 5px !important; margin: 5px 0px; box-sizing: border-box;
+border: 1px solid #ccc; font-size: 18px !important; font-weight: 300 }
+input:focus, textarea:focus { -moz-box-shadow: none !important;
+-webkit-box-shadow: none !important; box-shadow: none !important; border: 1px
+solid #00BCD4; outline-width: 0; font-weight: 400 } .btn-block { text-transform:
+uppercase; font-size: 15px !important; font-weight: 400; height: 43px; cursor:
+pointer } .btn-block:hover { color: #fff !important } button:focus {
+-moz-box-shadow: none !important; -webkit-box-shadow: none !important;
+box-shadow: none !important; outline-width: 0 }
 {% endblock %}
 
+{% block content%}
+
+<div class="container-fluid px-1 py-5 mx-auto">
+    <div class="row d-flex justify-content-center">
+        <div class="col-xl-9 col-lg-8 col-md-9 col-11 text-center">
+            <h3>Book an appointment</h3>
+
+
+
+            <div class="card">
+                <div class="container mt-4">
+                    <div class="row">
+                        {% if data %}
+
+                        <div class="col-md-4">
+
+                            {% for time in data %}
+                            <div class="card shadow-lg border-3 border-orange">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{time.date}}</h5>
+                                    <p class="card-text">{{time.start_time}} -
+                                        {{time.end_time}}</p>
+                                    <a href="/book-slot/{{time.id}}" class="btn"
+                                        style="background-color:
+                                        #f16000;
+                                        color: white;">Book</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% endfor%}
+            {% else %}
+            <h4 class="col-12 blue-text text-center">No slots Availble</h4>
+            {% endif%}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

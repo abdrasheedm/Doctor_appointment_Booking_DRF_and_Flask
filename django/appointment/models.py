@@ -6,8 +6,9 @@ from account.models import Account
 
 class Appointment(models.Model):
     doctor = models.ForeignKey(Doctors, on_delete=models.CASCADE)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    date = models.DateField(default='2023-02-09')
+    start_time = models.TimeField()
+    end_time = models.TimeField()
     is_available = models.BooleanField(default=True)
 
     def __str__(self):

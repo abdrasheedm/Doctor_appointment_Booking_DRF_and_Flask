@@ -1,0 +1,126 @@
+{% extends 'base.html' %} 
+{% block style %}
+
+    .card {
+    padding: 30px 40px;
+    margin-top: 60px;
+    margin-bottom: 60px;
+        border: none !important;
+        box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.2)
+    }
+
+    .blue-text {
+        color: #00BCD4
+    }
+
+    .form-control-label {
+        margin-bottom: 0
+    }
+
+    input,
+    textarea,
+    button {
+        padding: 8px 15px;
+        border-radius: 5px !important;
+        margin: 5px 0px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        font-size: 18px !important;
+        font-weight: 300
+    }
+
+    input:focus,
+    textarea:focus {
+        -moz-box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+        border: 1px solid #00BCD4;
+        outline-width: 0;
+        font-weight: 400
+    }
+
+    .btn-block {
+        text-transform: uppercase;
+        font-size: 15px !important;
+        font-weight: 400;
+        height: 43px;
+        cursor: pointer
+    }
+
+    .btn-block:hover {
+        color: #fff !important
+    }
+
+    button:focus {
+        -moz-box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+        outline-width: 0
+    }
+    .container1 {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 0 auto;
+        max-width: 800px;
+        text-align: center;
+      }
+      .btn-primary {
+        background-color: #f60;
+        color: #fff;
+      }
+    {% endblock %} 
+    {% block content %}
+
+    <div class="container-fluid px-1 py-5 mx-auto">
+        <div class="row d-flex justify-content-center">
+            <div class="col-xl-9 col-lg-8 col-md-9 col-11 text-center">
+                <div class="container1">
+                    <h1>My Booked Slots</h1>
+                    {% if data %}
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Doctor</th>
+                          <th>Category</th>
+                          <th>Date</th>
+                          <th>Time</th>
+                          <th></th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for slot in data %}
+                        <tr>
+                            <td>Dr. {{slot.appointment.doctor.doctor.first_name}}</td>
+                            <td>{{slot.appointment.doctor.category.category}}</td>
+                            <td>{{slot.appointment.date}}</td>
+                            <td>{{slot.appointment.start_time}} - {{slot.appointment.end_time}}</td>
+                            <td>
+                              <a href="#">Edit</a>
+                            </td>
+                            <td>
+                              <a href="/delete-slot/{{slot.id}}">Cancel</a>
+
+                            </td>
+                          </tr>
+                        {% endfor %}
+                        
+                        <!-- Add more rows for each booked slot -->
+                      </tbody>
+                    </table>
+                    {% else %}
+                    <h4 class="text-danger py-5">You don't have any booked slots</h4>
+
+                    {% endif%}
+                    <a href="/book-an-appointment" class="btn btn-primary">Book a New Slot</a>
+                  </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+
+
+{% endblock %}

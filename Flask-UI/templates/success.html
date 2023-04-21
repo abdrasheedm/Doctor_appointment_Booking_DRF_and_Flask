@@ -70,22 +70,8 @@
                 <div class="card">
                     
                   <div class="container" id="category">
-                    <h4 class="blue-text">Choose Your doctor</h4>
-                    <div class="row">
-                      <!-- Team Member 1 -->
-                      {% for doctor in data %}
-                      <div class="col-xl-3 col-md-6 mb-4 select-category" doc_id = {{doctor.id}} id="">
-                        <div class="card border-0 shadow">
-                          <img src="{{ url_for('static', filename='img/service1.jpg') }}" class="card-img-top" alt="...">
-                          <a href="/choose-time/{{doctor.id}}"><div class="card-body text-center">
-                            <h5 class="card-title mb-3">{{doctor.doctor.first_name}}</h5>
-                            <div class="card-text text-black-50">{{doctor.category.category}}</div>
-                          </div></a>
-                        </div>
-                      </div>
-                      {% endfor%}
-                      
-                    </div>
+                    <h4 class="text-success">Congratulation ! Your booking has been confirmed! Thank you for choosing our service</h4>
+                    
                     <!-- /.row -->
                   
                   </div>
@@ -96,30 +82,5 @@
 {% endblock %}
 
 {% block script %}
-
-<!-- <script>
-  $(document).ready(function() {
-    $('.select-category').click(function() {
-      var cat_id=$(this).attr('cat_id');
-      $.ajax({
-        type: 'POST',
-        url: '/choose-doctor',
-        contentType: 'application/json',
-        data: JSON.stringify({
-           cat_id : cat_id
-        }),
-        success: function(response) {
-          $("#category").html(response.html);
-        },
-        error: function(xhr, status, error) {
-            console.log(error);
-        }
-    });
-    
-    
-    
-    });
-  });
-</script> -->
 
 {% endblock %}

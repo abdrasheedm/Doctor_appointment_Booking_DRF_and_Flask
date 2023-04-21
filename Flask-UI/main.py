@@ -1,4 +1,6 @@
 from flask import Flask, render_template, session, request, redirect, url_for, render_template_string, jsonify
+from datetime import datetime
+
 
 import requests
 import secrets
@@ -82,7 +84,6 @@ def signin():
 
 @app.route('/logout')
 def logout():
-    # remove token an user_id from session
     session.pop('token', None)
     session.pop('user_id', None)
 
@@ -91,14 +92,19 @@ def logout():
 
 @app.route('/book-an-appointment')
 def book_appointment():
-    response = requests.get(BASEURL+'doctors/categories/')
-    if response.status_code == 200:
-        data = response.json()
-        print(data)
-        return render_template('appointment.html', data=data)
-    else:
-        print(response.json())
-        return redirect('/')
+    try:
+        if session['token']:
+            response = requests.get(BASEURL+'doctors/categories/')
+            if response.status_code == 200:
+                data = response.json()
+                print(data)
+                return render_template('appointment.html', data=data)
+            else:
+                print(response.json())
+                return redirect('/')
+    except:
+        return redirect('/signin')
+
     
 
 @app.route('/choose-doctor/<int:cat_id>', methods=['GET', 'POST'])
@@ -112,10 +118,61 @@ def choose_doctor(cat_id):
     else:
         print(response.json())
         return redirect('/')
+
+
     
-@app.route('/choose-time/<int:doc_id')
+@app.route('/choose-time/<int:doc_id>')
 def choose_time(doc_id):
     print(doc_id)
+    response = requests.get(BASEURL+'appointments/time-slots/?doc_id='+str(doc_id))
+    if response.status_code == 200:
+        data = response.json()
+        print(data)
+        return render_template('choose_time.html', data=data)
+    else:
+        print(response.json())
+        return redirect('/')
+    
+
+@app.route('/book-slot/<int:slot_id>')
+def book_slot(slot_id):
+    user_id = session['user_id']
+    data = {
+        "appointment" : slot_id,
+        "user" : user_id
+    }
+    response = requests.post(BASEURL+'appointments/book-slot/', data)
+    if response.status_code == 201:
+        data = response.json()
+        print(data)
+        return render_template('success.html')
+    else:
+        print(response.json())
+        return redirect('/')
+    
+
+@app.route('/booked-slots')
+def booked_slots():
+    u_id = session['user_id']
+    response = requests.get(BASEURL+'appointments/booked-appointments/?user_id='+ str(u_id))
+    if response.status_code == 200:
+        data = response.json()
+        print(data)
+        return render_template('booked_slots.html', data=data)
+    else:
+        print(response.json())
+        return redirect('/')
+    
+
+@app.route('/delete-slot/<int:slot_id>')
+def delete_slot(slot_id):
+    print(slot_id, '----------------------------')
+    response = requests.delete(BASEURL+'appointments/delete-slot/?slot_id='+ str(slot_id))
+    if response.status_code == 204:
+        print('success')
+        return redirect('/booked-slots')
+    else:
+        return redirect('/booked-slots')
     
 
     

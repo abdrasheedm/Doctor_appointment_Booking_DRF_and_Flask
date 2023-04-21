@@ -24,7 +24,6 @@ class GetDoctorsView(APIView):
         try:
             doctors = Doctors.objects.filter(category=cat_id)
             serializer = GetDoctorSerializer(instance=doctors, many=True)
-            print(serializer.data)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         
         except:
