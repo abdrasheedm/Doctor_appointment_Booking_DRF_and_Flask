@@ -1,9 +1,12 @@
 from flask import Flask, render_template, session, request, redirect, url_for
 import json, requests, secrets
+from datetime import timedelta
 
 secret_key = secrets.token_hex(32)
 app = Flask(__name__)
 app.secret_key = secret_key
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7).total_seconds()
+
 
 BASEURL = 'http://127.0.0.1:8000/api/'
 
@@ -115,6 +118,9 @@ def logout():
         session.pop('token', None)
         session.pop('user_id', None)
         return redirect('/')
+    elif response.status_code == 401:
+        refresh_token()
+        return redirect('/logout')
     else:
         return redirect('/')
     
@@ -161,7 +167,7 @@ def choose_time(doc_id):
         return render_template('choose_time.html', data=data)
     elif response.status_code == 401:
         refresh_token()
-        return redirect(choose_time(doc_id))
+        return redirect('/choose-time/'+str(doc_id))
     else:
         return render_template('404_error.html')
     
@@ -186,7 +192,7 @@ def book_slot(slot_id):
         return render_template('success.html')
     elif response.status_code == 401:
         refresh_token()
-        return redirect(book_slot(slot_id))
+        return redirect('/book-slot/'+str(slot_id))
     else:
         return redirect('/')
     
@@ -203,11 +209,12 @@ def booked_slots():
     response = requests.get(BASEURL+'appointments/booked-appointments/?user_id='+ str(u_id), headers=headers)
     if response.status_code == 200:
         data = response.json()
+        print('booked slots')
         return render_template('booked_slots.html', data=data)
     elif response.status_code == 401:
         refresh_token()
         print('going to booked slots')
-        return redirect(booked_slots())
+        return redirect('/booked-slots')
     else:
         return redirect('/')
     
@@ -226,7 +233,7 @@ def delete_slot(slot_id):
     
     elif response.status_code == 401:
         refresh_token()
-        return redirect(delete_slot(slot_id))
+        return redirect('/delete-slot/'+ str(slot_id))
     else:
         return redirect('/booked-slots')
     
