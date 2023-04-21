@@ -10,7 +10,9 @@ BASEURL = 'http://127.0.0.1:8000/api/'
 
 # Resfresh token
 def refresh_token():
+    print('here')
     if 'token' not in session:
+        print('no token')
         return redirect('/signin')
     token = session['token']
     refresh = token['refresh']
@@ -22,6 +24,7 @@ def refresh_token():
     if response.status_code == 200:
         data = response.json()
         session['token'] = data
+        print('token refreshed')
         return
     else:
         return redirect('/signin')
@@ -156,7 +159,7 @@ def choose_time(doc_id):
     if response.status_code == 200:
         data = response.json()
         return render_template('choose_time.html', data=data)
-    elif response.staticmethod == 401:
+    elif response.status_code == 401:
         refresh_token()
         return redirect(choose_time(doc_id))
     else:
@@ -181,7 +184,7 @@ def book_slot(slot_id):
     if response.status_code == 201:
         data = response.json()
         return render_template('success.html')
-    elif response.staticmethod == 401:
+    elif response.status_code == 401:
         refresh_token()
         return redirect(book_slot(slot_id))
     else:
@@ -201,9 +204,10 @@ def booked_slots():
     if response.status_code == 200:
         data = response.json()
         return render_template('booked_slots.html', data=data)
-    elif response.staticmethod == 401:
+    elif response.status_code == 401:
         refresh_token()
-        return redirect(book_slot())
+        print('going to booked slots')
+        return redirect(booked_slots())
     else:
         return redirect('/')
     
@@ -220,7 +224,7 @@ def delete_slot(slot_id):
     if response.status_code == 204:
         return redirect('/booked-slots')
     
-    elif response.staticmethod == 401:
+    elif response.status_code == 401:
         refresh_token()
         return redirect(delete_slot(slot_id))
     else:
