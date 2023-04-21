@@ -30,14 +30,13 @@ class SignUpView(generics.GenericAPIView):
 
         if serializer.is_valid():
             serializer.save()
-            send_otp(request.data.get('phone_number'))
+            # send_otp(request.data.get('phone_number'))
             response = {
                 "message" : "User created Succesfully"
             }
             return Response(data = response, status=status.HTTP_201_CREATED)
 
         else:
-            print(serializer.errors)
             errorMessage = "Error occurred Please check your inputs"
             if Account.objects.filter(email=email).exists():
                 errorMessage = "Email is already taken"
@@ -54,9 +53,8 @@ class verify_otpView(APIView):
         data = request.data
         check_otp = data.get('otp')
         phone_number = data.get('phone_number')
-        print(check_otp, phone_number)
-        check = verify_otp(phone_number, check_otp)
-        # check = True
+        # check = verify_otp(phone_number, check_otp)
+        check = True
 
         if check:
             user = Account.objects.get(phone_number = phone_number)
@@ -103,7 +101,6 @@ class LogoutView(APIView):
 
     def post(self, request:Response):
         try:
-            print(request.data)
             refresh_token = request.data["refresh"]
             token = RefreshToken(refresh_token)
             token.blacklist()

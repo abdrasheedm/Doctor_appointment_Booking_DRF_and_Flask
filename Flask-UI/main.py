@@ -11,7 +11,6 @@ BASEURL = 'http://127.0.0.1:8000/api/'
 # Resfresh token
 def refresh_token():
     if 'token' not in session:
-        print('inside')
         return redirect('/signin')
     token = session['token']
     refresh = token['refresh']
@@ -78,6 +77,8 @@ def verify_otp(phone_number):
             return redirect('/verify_otp')
     return render_template('verify_otp.html', mobile=phone_number)
 
+
+
 @app.route('/signin', methods=['GET', 'POST'])
 def signin():
     if request.method == 'POST':
@@ -94,15 +95,12 @@ def signin():
             session["user_id"] = data['user_id']
             return redirect('/')
         else:
-            print(response.json())
             return redirect('/signin')
     return render_template('signin.html')
 
 
 @app.route('/logout')
 def logout():
-    print('hai')
-    print('hai')
     if 'token' not in session:
         return redirect('/signin')
     token = session['token']
@@ -125,10 +123,8 @@ def book_appointment():
             response = requests.get(BASEURL+'doctors/categories/')
             if response.status_code == 200:
                 data = response.json()
-                print(data)
                 return render_template('appointment.html', data=data)
             else:
-                print(response.json())
                 return redirect('/')
     except:
         return redirect('/signin')
@@ -144,7 +140,6 @@ def choose_doctor(cat_id):
         data = response.json()
         return render_template('doctors.html', data=data)
     else:
-        print(response.json())
         return render_template('404_error.html')
 
 
@@ -210,7 +205,6 @@ def booked_slots():
         refresh_token()
         return redirect(book_slot())
     else:
-        print(response.json())
         return redirect('/')
     
 

@@ -29,7 +29,6 @@ class GetTimeSlotsView(APIView):
 class BookSlotView(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request : Request):
-        print(request.data, '---------------------------------')
         serializer = BookSlotSerializer(data=request.data)
 
         if serializer.is_valid():
@@ -37,7 +36,6 @@ class BookSlotView(APIView):
             return Response({"message": "Slot booked successfully"}, status=status.HTTP_201_CREATED)
         
         else:
-            print(serializer.errors)
             return Response({"message" : "Invalid inputs"}, status=status.HTTP_400_BAD_REQUEST)
         
 
