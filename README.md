@@ -5,18 +5,23 @@ This is a web application that allows users to schedule a session with a doctor 
 1. Django Rest Framework
 2. Flask
 3. JWT
+4. Twilio
 
 # Installation
 To install and run this application on a local machine, follow these steps:
-1. Clone the repository: git clone https://github.com/your-username/doctor-appointment-booking-app.git
+1. Clone the repository: https://github.com/abdrasheedm/Doctor_appointment_Booking_DRF_and_Flask.git
 2. Install the required dependencies: pip install -r requirements.txt
 3. Run the server: python manage.py runserver
 
-
+NB : This repository contains both Django and Flask. So you want to configure both separately.
 
 # Usage
 To use the app, follow these steps:
-Sign up for an account.
-Log in with your credentials.
-Choose a doctor category.
-Schedule a session with the available doctor.
+1. Sign up for an account.
+2. Log in with your credentials.
+3. Choose a doctor category.
+4. Choose your favourite doctor
+5. Schedule a session with the doctor.
+
+
+
